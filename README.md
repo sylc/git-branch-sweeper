@@ -1,6 +1,6 @@
 # Git-Branch-Sweeper
 
-Node Cli to easily bulk delete local and remote branches. 
+Node CLI to easily bulk delete local and remote branches. 
 
 ## Installation
 
@@ -27,3 +27,7 @@ You will be prompted with the list of Branches that can be deleted, i.e:
 
 To build the project, in VS Code, run the default build task (which is tsc watch)
 or run `npm run build`
+
+## TODO
+- prune branches
+- publish to npm

@@ -34,6 +34,13 @@ export async function gitListBranches(opts: string, remote = false) {
 
       // cannot delete current branch
       if (branchName === branchSummary.current) {
+        console.log(
+          chalk.blue(
+            `${chalk.bold(
+              branchSummary.current,
+            )} is active and cannot be deleted`,
+          ),
+        );
         return false;
       }
 

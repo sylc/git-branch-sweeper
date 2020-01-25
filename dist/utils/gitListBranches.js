@@ -74,6 +74,7 @@ function gitListBranches(opts, remote) {
                         // on the remote, myBranchSelection will be 'remotes/origin/' + username;
                         // cannot delete current branch
                         if (branchName === branchSummary_1.current) {
+                            console.log(chalk_1.default.blue(chalk_1.default.bold(branchSummary_1.current) + " is active and cannot be deleted"));
                             return false;
                         }
                         // ensure branch is not part of the blackList array.

@@ -19,7 +19,9 @@ const branchNameTestList = [
 ];
 
 test('branch to be excluded/included correctly', () => {
-  branchNameTestList.map((test) => {
-    expect(excludeBlacklist(test.name, blackList)).toEqual(test.shouldBeExcluded);
+  branchNameTestList.map(test => {
+    expect(excludeBlacklist(test.name, blackList)).toEqual(
+      test.shouldBeExcluded,
+    );
   });
 });

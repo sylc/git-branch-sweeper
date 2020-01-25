@@ -9,7 +9,6 @@ enum RepoType {
 }
 
 const git = require('cmd-executor').git;
-console.log(`looking for pattern ${myBranchPattern}`);
 
 async function deleteRemoteMergedBranches(myBranches: string[]) {
   console.log(chalk.green('Deleting remote branches:'));

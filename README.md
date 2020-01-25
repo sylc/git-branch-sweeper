@@ -19,7 +19,15 @@ From inside a gihub repo run `git-branch-sweeper` or `gbs`
 You will be prompted with the list of Branches that can be deleted, i.e:
 
 - For the local repo: All branches that have been _**merged**_, except branches **starting** with names `master` and `release`
-- For the remote: All branches that have been _**merged**_ with names containing your username except branches **starting** with names `master` and `release`
+- For the remote: All branches that have been _**merged**_ with names containing your username\* except branches **starting** with names `master` and `release`
+
+* you can configure the branch pattern by providing a .gbsrc file in your HOME directory as follow:
+
+```json
+{
+  "myBracnhPattern": "my-cool-name"
+}
+```
 
 ## Summary Of what the tool do
 

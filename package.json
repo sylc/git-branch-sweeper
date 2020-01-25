@@ -10,6 +10,7 @@
     "gbs": "./dist/index.js"
   },
   "scripts": {
+    "dev": "ts-node ./src/index.ts",
     "build": "tsc",
     "test": "jest"
   },

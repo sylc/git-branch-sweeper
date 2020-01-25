@@ -45,7 +45,7 @@ var RepoType;
     RepoType["Local"] = "local";
 })(RepoType || (RepoType = {}));
 var git = require('cmd-executor').git;
-console.log("looking for pattern " + branchPattern_1.myBranchPattern);
+console.log("looking for branches with pattern " + chalk_1.default.green(branchPattern_1.myBranchPattern));
 function deleteRemoteMergedBranches(myBranches) {
     return __awaiter(this, void 0, void 0, function () {
         var _i, myBranches_1, branch, br;

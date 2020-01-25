@@ -39,24 +39,11 @@ var os = require("os");
 var inquirer = require("inquirer");
 var chalk_1 = require("chalk");
 var utils = require("./utils/branch");
-/*
-Executive Summary
-
-$ git push origin --delete <branch_name>
-$ git branch -d <branch_name>
-If there are unmerged changes which you are confident of deleting:
-
-$ git branch -D <branch_name>
-Delete Local Branch
-
-To delete the local branch use:
-
-$ git branch -d branch_name
-Note: The -d option is an alias for --delete, which only deletes the branch if
-it has already been fully merged in its upstream branch.
-You could also use -D, which is an alias for --delete --force, which deletes
-the branch "irrespective of its merged status." [Source: man git-branch]
-*/
+var RepoType;
+(function (RepoType) {
+    RepoType["Remote"] = "remote";
+    RepoType["Local"] = "local";
+})(RepoType || (RepoType = {}));
 var git = require('cmd-executor').git;
 var myBranchPattern = os.userInfo().username + "_";
 console.log("looking for pattern " + myBranchPattern);
@@ -97,7 +84,7 @@ function gitListBranches(opts, remote) {
                     if (remote) {
                         console.log(chalk_1.default.green("Retrieving branches with pattern: " + myBranchSelection));
                     }
-                    return [4 /*yield*/, git.fetch()];
+                    return [4 /*yield*/, git.fetch('--prune')];
                 case 2:
                     _a.sent();
                     return [4 /*yield*/, git.branch(opts)];
@@ -113,8 +100,9 @@ function gitListBranches(opts, remote) {
                             return false;
                         }
                         // ensure branch is not part of the blackList array.
-                        if (excludeBlacklist(branchName, exports.blackList))
+                        if (excludeBlacklist(branchName, exports.blackList)) {
                             return false;
+                        }
                         // search for my branch pattern
                         if (branchName.indexOf(myBranchSelection) > -1) {
                             return true;
@@ -194,7 +182,7 @@ function deleteLocalMergedBranch(branchName) {
                             },
                         ])];
                 case 3:
-                    agree = _a.sent();
+                    agree = (_a.sent());
                     if (!agree) return [3 /*break*/, 5];
                     return [4 /*yield*/, git.branch("-D " + branchName)];
                 case 4:
@@ -224,7 +212,7 @@ function deleteLocalUnMergedBranch(branchName) {
                         },
                     ])];
                 case 1:
-                    agree = _a.sent();
+                    agree = (_a.sent());
                     if (!agree) return [3 /*break*/, 3];
                     return [4 /*yield*/, git.branch("-D " + branchName)];
                 case 2:
@@ -251,18 +239,18 @@ function prompt() {
                                 type: 'list',
                                 name: 'repo',
                                 message: 'Where would you like to delete your branches',
-                                choices: ['local', 'remote'],
+                                choices: [RepoType.Local, RepoType.Remote],
                                 filter: function (val) {
                                     return val.toLowerCase();
                                 },
                             },
                         ])];
                 case 1:
-                    repoType = _c.sent();
+                    repoType = (_c.sent());
                     _a = repoType.repo;
                     switch (_a) {
-                        case 'local': return [3 /*break*/, 2];
-                        case 'remote': return [3 /*break*/, 12];
+                        case RepoType.Local: return [3 /*break*/, 2];
+                        case RepoType.Remote: return [3 /*break*/, 12];
                     }
                     return [3 /*break*/, 16];
                 case 2:
@@ -278,15 +266,15 @@ function prompt() {
                     allMyLocalBranches.push.apply(allMyLocalBranches, localMergedBranches);
                     allMyLocalBranches.push(new inquirer.Separator(' = Un-Merged Branches ='));
                     allMyLocalBranches.push.apply(allMyLocalBranches, localNoMergedBranches);
-                    return [4 /*yield*/, (inquirer.prompt({
+                    return [4 /*yield*/, inquirer.prompt({
                             type: 'checkbox',
                             name: 'branches',
                             message: 'Which branches would you like to delete',
                             choices: allMyLocalBranches,
                             pageSize: 20,
-                        }))];
+                        })];
                 case 5:
-                    myChoiceOfLocalBranches = _c.sent();
+                    myChoiceOfLocalBranches = (_c.sent());
                     console.log(chalk_1.default.green('Deleting local Branches:'));
                     _i = 0, _b = myChoiceOfLocalBranches.branches;
                     _c.label = 6;
@@ -310,15 +298,15 @@ function prompt() {
                 case 13:
                     allMyRemoteBranches = _c.sent();
                     allMyRemoteBranches.push(new inquirer.Separator());
-                    return [4 /*yield*/, (inquirer.prompt({
+                    return [4 /*yield*/, inquirer.prompt({
                             type: 'checkbox',
                             name: 'branches',
                             message: 'Which branches would you like to delete',
                             choices: allMyRemoteBranches,
                             pageSize: 20,
-                        }))];
+                        })];
                 case 14:
-                    myChoiceOfRemoteBranches = _c.sent();
+                    myChoiceOfRemoteBranches = (_c.sent());
                     return [4 /*yield*/, deleteRemoteMergedBranches(myChoiceOfRemoteBranches.branches)];
                 case 15:
                     _c.sent();

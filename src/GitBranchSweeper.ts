@@ -4,6 +4,11 @@ import chalk from 'chalk';
 
 import * as utils from './utils/branch';
 
+enum RepoType {
+  Remote = 'remote',
+  Local = 'local',
+}
+
 const git = require('cmd-executor').git;
 
 const myBranchPattern = `${os.userInfo().username}_`;
@@ -152,7 +157,7 @@ export async function prompt() {
         type: 'list',
         name: 'repo',
         message: 'Where would you like to delete your branches',
-        choices: ['local', 'remote'],
+        choices: [RepoType.Local, RepoType.Remote],
         filter: (val: any) => {
           return val.toLowerCase();
         },
@@ -160,7 +165,7 @@ export async function prompt() {
     ])) as { repo: string };
 
     switch (repoType.repo) {
-      case 'local':
+      case RepoType.Local:
         console.log(chalk.green('Retrieving Local branches...'));
         // list my local branches MERGED
         const localMergedBranches = await gitListBranches('-v --merged', false);
@@ -198,7 +203,7 @@ export async function prompt() {
         }
         break;
 
-      case 'remote':
+      case RepoType.Remote:
         // list my remote branches
         const allMyRemoteBranches: string[] = await gitListBranches(
           '-v -a --merged',

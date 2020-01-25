@@ -23,21 +23,23 @@ You will be prompted with the list of Branches that can be deleted, i.e:
 
 ## Summary Of what the tool do
 
+To list the branches
+
+```
+$ git fetch --prune
+for local branches: git branch -v --merged/--no-merged
+for remote branches: git branch -a -v --merged/--no-merged
+```
+
+When you choose to delete a branch
+
+```
 $ git push origin --delete <branch_name>
+// for merged:
 $ git branch -d <branch_name>
-If there are unmerged changes which you are confident of deleting:
-
-\$ git branch -D <branch_name>
-Delete Local Branch
-
-To delete the local branch use:
-
-\$ git branch -d branch_name
-Note: The -d option is an alias for --delete, which only deletes the branch if
-it has already been fully merged in its upstream branch.
-You could also use -D, which is an alias for --delete --force, which deletes
-the branch "irrespective of its merged status." [Source: man git-branch]
-\*/
+// Or for unmerged:
+$ git branch -D <branch_name>
+```
 
 ## Notes
 
@@ -53,11 +55,12 @@ or run `npm run build`
 
 ### Test
 
-run `npm run test`
+- Run the automated test `npm run test`
+- Once built, call node `./dist/index.js`
 
 ## TODOs
 
 - publish to npm
 - configurable branch pattern whitelist and blacklist
-- show stale branch
-- verbose mode
+- show stale branch information (stale from x days)
+- verbose mode (git command that are executed)

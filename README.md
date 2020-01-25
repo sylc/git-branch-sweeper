@@ -68,7 +68,7 @@ or run `npm run build`
 
 ## TODOs
 
-- publish to npm
+- publish to npm and remove dist folder from git
 - configurable branch pattern whitelist and blacklist
 - show stale branch information (stale from x days)
 - verbose mode (git command that are executed)

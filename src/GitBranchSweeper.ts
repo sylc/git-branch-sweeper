@@ -1,8 +1,7 @@
-import * as os from 'os';
 import * as inquirer from 'inquirer';
 import chalk from 'chalk';
-
-import * as utils from './utils/branch';
+import { myBranchPattern } from './utils/branchPattern';
+import { gitListBranches } from './utils/gitListBranches';
 
 enum RepoType {
   Remote = 'remote',
@@ -10,85 +9,7 @@ enum RepoType {
 }
 
 const git = require('cmd-executor').git;
-
-const myBranchPattern = `${os.userInfo().username}_`;
 console.log(`looking for pattern ${myBranchPattern}`);
-// name of branches to be always excluded from listing.
-// if release is specified, all branches like release**** will be excluded.
-export const blackList = ['master', 'release'];
-
-export function excludeBlacklist(
-  branchName: string,
-  blackList: string[],
-): boolean {
-  // ensure that branch name is not part of blacklist
-  let toExclude = false;
-  blackList.map(blacklistPattern => {
-    const reg1 = RegExp(`\/${blacklistPattern}`, 'i'); // will match 'remotes/origin/<pattern>'
-    const reg2 = RegExp(`^${blacklistPattern}`, 'i'); // will match '<pattern>'
-    if (branchName.search(reg1) > -1 || branchName.search(reg2) > -1) {
-      toExclude = true;
-    }
-  });
-
-  return toExclude;
-}
-
-/**
- * Retrieve branches list
- * @param opts git branch options eg: -v --merged
- * @param remote if we are looking for remote or local branches
- */
-async function gitListBranches(opts: string, remote = false) {
-  let myBranchSelection = '';
-  if (remote) myBranchSelection = `remotes/origin/${myBranchPattern}`;
-
-  try {
-    if (remote) {
-      console.log(
-        chalk.green(`Retrieving branches with pattern: ${myBranchSelection}`),
-      );
-    }
-
-    await git.fetch('--prune');
-    const rawBranches = await git.branch(opts);
-
-    const branchSummary = utils.parseBranches(rawBranches);
-    const branchList = branchSummary.all;
-
-    // filter branches to pattern
-    const myBranches = branchList.filter(branchName => {
-      // on the local repo, myBranchSelection will be '' : i.e: all branches will be listed
-      // on the remote, myBranchSelection will be 'remotes/origin/' + username;
-
-      // cannot delete current branch
-      if (branchName === branchSummary.current) {
-        return false;
-      }
-
-      // ensure branch is not part of the blackList array.
-      if (excludeBlacklist(branchName, blackList)) {
-        return false;
-      }
-
-      // search for my branch pattern
-      if (branchName.indexOf(myBranchSelection) > -1) {
-        return true;
-      }
-
-      // default
-      return false;
-    });
-
-    if (myBranches.includes(branchSummary.current)) {
-      console.log(chalk.yellow(`cannot delete ${branchSummary.current}`));
-    }
-    return myBranches;
-  } catch (err) {
-    console.log('Error listing Branches', err);
-    throw err;
-  }
-}
 
 async function deleteRemoteMergedBranches(myBranches: string[]) {
   console.log(chalk.green('Deleting remote branches:'));

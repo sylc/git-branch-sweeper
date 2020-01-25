@@ -35,94 +35,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var os = require("os");
 var inquirer = require("inquirer");
 var chalk_1 = require("chalk");
-var utils = require("./utils/branch");
+var branchPattern_1 = require("./utils/branchPattern");
+var gitListBranches_1 = require("./utils/gitListBranches");
 var RepoType;
 (function (RepoType) {
     RepoType["Remote"] = "remote";
     RepoType["Local"] = "local";
 })(RepoType || (RepoType = {}));
 var git = require('cmd-executor').git;
-var myBranchPattern = os.userInfo().username + "_";
-console.log("looking for pattern " + myBranchPattern);
-// name of branches to be always excluded from listing.
-// if release is specified, all branches like release**** will be excluded.
-exports.blackList = ['master', 'release'];
-function excludeBlacklist(branchName, blackList) {
-    // ensure that branch name is not part of blacklist
-    var toExclude = false;
-    blackList.map(function (blacklistPattern) {
-        var reg1 = RegExp("/" + blacklistPattern, 'i'); // will match 'remotes/origin/<pattern>'
-        var reg2 = RegExp("^" + blacklistPattern, 'i'); // will match '<pattern>'
-        if (branchName.search(reg1) > -1 || branchName.search(reg2) > -1) {
-            toExclude = true;
-        }
-    });
-    return toExclude;
-}
-exports.excludeBlacklist = excludeBlacklist;
-/**
- * Retrieve branches list
- * @param opts git branch options eg: -v --merged
- * @param remote if we are looking for remote or local branches
- */
-function gitListBranches(opts, remote) {
-    if (remote === void 0) { remote = false; }
-    return __awaiter(this, void 0, void 0, function () {
-        var myBranchSelection, rawBranches, branchSummary_1, branchList, myBranches, err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    myBranchSelection = '';
-                    if (remote)
-                        myBranchSelection = "remotes/origin/" + myBranchPattern;
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 4, , 5]);
-                    if (remote) {
-                        console.log(chalk_1.default.green("Retrieving branches with pattern: " + myBranchSelection));
-                    }
-                    return [4 /*yield*/, git.fetch('--prune')];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, git.branch(opts)];
-                case 3:
-                    rawBranches = _a.sent();
-                    branchSummary_1 = utils.parseBranches(rawBranches);
-                    branchList = branchSummary_1.all;
-                    myBranches = branchList.filter(function (branchName) {
-                        // on the local repo, myBranchSelection will be '' : i.e: all branches will be listed
-                        // on the remote, myBranchSelection will be 'remotes/origin/' + username;
-                        // cannot delete current branch
-                        if (branchName === branchSummary_1.current) {
-                            return false;
-                        }
-                        // ensure branch is not part of the blackList array.
-                        if (excludeBlacklist(branchName, exports.blackList)) {
-                            return false;
-                        }
-                        // search for my branch pattern
-                        if (branchName.indexOf(myBranchSelection) > -1) {
-                            return true;
-                        }
-                        // default
-                        return false;
-                    });
-                    if (myBranches.includes(branchSummary_1.current)) {
-                        console.log(chalk_1.default.yellow("cannot delete " + branchSummary_1.current));
-                    }
-                    return [2 /*return*/, myBranches];
-                case 4:
-                    err_1 = _a.sent();
-                    console.log('Error listing Branches', err_1);
-                    throw err_1;
-                case 5: return [2 /*return*/];
-            }
-        });
-    });
-}
+console.log("looking for pattern " + branchPattern_1.myBranchPattern);
 function deleteRemoteMergedBranches(myBranches) {
     return __awaiter(this, void 0, void 0, function () {
         var _i, myBranches_1, branch, br;
@@ -159,7 +82,7 @@ function deleteRemoteMergedBranches(myBranches) {
 }
 function deleteLocalMergedBranch(branchName) {
     return __awaiter(this, void 0, void 0, function () {
-        var err_2, agree;
+        var err_1, agree;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -170,9 +93,9 @@ function deleteLocalMergedBranch(branchName) {
                     console.log(chalk_1.default.blue("* deleted: " + branchName));
                     return [3 /*break*/, 7];
                 case 2:
-                    err_2 = _a.sent();
+                    err_1 = _a.sent();
                     console.log(chalk_1.default.blue("* Failed deleted: " + branchName + " with error: "));
-                    console.log(err_2);
+                    console.log(err_1);
                     return [4 /*yield*/, inquirer.prompt([
                             {
                                 type: 'confirm',
@@ -229,7 +152,7 @@ function deleteLocalUnMergedBranch(branchName) {
 }
 function prompt() {
     return __awaiter(this, void 0, void 0, function () {
-        var repoType, _a, localMergedBranches, localNoMergedBranches, allMyLocalBranches, myChoiceOfLocalBranches, _i, _b, branch, allMyRemoteBranches, myChoiceOfRemoteBranches, err_3;
+        var repoType, _a, localMergedBranches, localNoMergedBranches, allMyLocalBranches, myChoiceOfLocalBranches, _i, _b, branch, allMyRemoteBranches, myChoiceOfRemoteBranches, err_2;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -255,10 +178,10 @@ function prompt() {
                     return [3 /*break*/, 16];
                 case 2:
                     console.log(chalk_1.default.green('Retrieving Local branches...'));
-                    return [4 /*yield*/, gitListBranches('-v --merged', false)];
+                    return [4 /*yield*/, gitListBranches_1.gitListBranches('-v --merged', false)];
                 case 3:
                     localMergedBranches = _c.sent();
-                    return [4 /*yield*/, gitListBranches('-v --no-merged', false)];
+                    return [4 /*yield*/, gitListBranches_1.gitListBranches('-v --no-merged', false)];
                 case 4:
                     localNoMergedBranches = _c.sent();
                     allMyLocalBranches = [];
@@ -294,7 +217,7 @@ function prompt() {
                     _i++;
                     return [3 /*break*/, 6];
                 case 11: return [3 /*break*/, 17];
-                case 12: return [4 /*yield*/, gitListBranches('-v -a --merged', true)];
+                case 12: return [4 /*yield*/, gitListBranches_1.gitListBranches('-v -a --merged', true)];
                 case 13:
                     allMyRemoteBranches = _c.sent();
                     allMyRemoteBranches.push(new inquirer.Separator());
@@ -318,8 +241,8 @@ function prompt() {
                     console.log(chalk_1.default.green('Done!'));
                     return [3 /*break*/, 19];
                 case 18:
-                    err_3 = _c.sent();
-                    console.log(err_3);
+                    err_2 = _c.sent();
+                    console.log(err_2);
                     return [3 /*break*/, 19];
                 case 19: return [2 /*return*/];
             }

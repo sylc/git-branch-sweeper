@@ -1,5 +1,6 @@
 import * as os from 'os';
-import { excludeBlacklist, blackList } from '../GitBranchSweeper';
+import { excludeBlacklist } from '../utils/excludeBlacklist';
+import { blackListPattern } from '../utils/branchPattern';
 
 const myBranchPattern = `${os.userInfo().username}_`;
 
@@ -20,7 +21,7 @@ const branchNameTestList = [
 
 test('branch to be excluded/included correctly', () => {
   branchNameTestList.map(test => {
-    expect(excludeBlacklist(test.name, blackList)).toEqual(
+    expect(excludeBlacklist(test.name, blackListPattern)).toEqual(
       test.shouldBeExcluded,
     );
   });

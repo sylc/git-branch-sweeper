@@ -15,7 +15,8 @@
   "scripts": {
     "dev": "ts-node --files ./src/index.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "release": "npm run build && np"
   },
   "dependencies": {
     "chalk": "2.4.2",

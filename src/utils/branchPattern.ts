@@ -15,9 +15,11 @@ let userConfig: Partial<Config> = {};
 
 try {
   const filePath = `${path.join(os.homedir(), '.gbsrc')}`;
-  userConfig = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
+  if (fs.existsSync(filePath)) {
+    userConfig = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
+  }
 } catch (err) {
-  // do nothing;
+  throw Error('failed to read user config');
 }
 
 const config = { ...defaults, ...userConfig };

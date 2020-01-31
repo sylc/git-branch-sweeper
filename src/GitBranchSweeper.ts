@@ -1,6 +1,5 @@
 import * as inquirer from 'inquirer';
 import chalk from 'chalk';
-import { myBranchPattern } from './utils/branchPattern';
 import { gitListBranches } from './utils/gitListBranches';
 
 enum RepoType {

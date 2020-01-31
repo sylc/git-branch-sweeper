@@ -5,6 +5,9 @@
   "author": "Sylvan Cau",
   "license": "MIT",
   "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
   "bin": {
     "git-branch-sweeper": "./dist/index.js",
     "gbs": "./dist/index.js"

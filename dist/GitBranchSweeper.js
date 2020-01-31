@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inquirer = require("inquirer");
 var chalk_1 = require("chalk");
-var branchPattern_1 = require("./utils/branchPattern");
 var gitListBranches_1 = require("./utils/gitListBranches");
 var RepoType;
 (function (RepoType) {
@@ -45,7 +44,6 @@ var RepoType;
     RepoType["Local"] = "local";
 })(RepoType || (RepoType = {}));
 var git = require('cmd-executor').git;
-console.log("looking for branches with pattern " + chalk_1.default.green(branchPattern_1.myBranchPattern));
 function deleteRemoteMergedBranches(myBranches) {
     return __awaiter(this, void 0, void 0, function () {
         var _i, myBranches_1, branch, br;

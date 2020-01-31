@@ -20,12 +20,12 @@ var defaults = {
 var userConfig = {};
 try {
     var filePath = "" + path.join(os.homedir(), '.gbsrc');
-    userConfig = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
-    console.log('applying user config');
+    if (fs.existsSync(filePath)) {
+        userConfig = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
+    }
 }
 catch (err) {
-    // do nothing;
-    console.log(err);
+    throw Error('failed to read user config');
 }
 var config = __assign({}, defaults, userConfig);
 exports.myBranchPattern = config.myBranchPattern;

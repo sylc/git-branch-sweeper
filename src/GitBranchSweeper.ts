@@ -33,7 +33,7 @@ async function deleteLocalMergedBranch(branchName: string) {
     console.log(chalk.blue(`* deleted: ${branchName}`));
   } catch (err) {
     console.log(chalk.blue(`* Failed deleted: ${branchName} with error: `));
-    console.log(err);
+    console.log(`${err}`);
     const agree = (await inquirer.prompt([
       {
         type: 'confirm',

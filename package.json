@@ -4,7 +4,13 @@
   "description": "Node CLI to easily bulk delete local and remote branches.",
   "author": "Sylvan Cau",
   "license": "MIT",
+  "repository": "sylc/git-branch-sweeper",
   "main": "./dist/index.js",
+  "keywords": [
+    "cli",
+    "git",
+    "clean"
+  ],
   "files": [
     "dist"
   ],

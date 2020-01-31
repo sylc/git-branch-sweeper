@@ -4,10 +4,8 @@ Node CLI to easily bulk delete local and remote branches.
 
 ## Installation
 
-Run the following command
-
 ```
-npm i -g  https://github.com/sylc/git-branch-sweeper.git
+$ npm install --global git-branch-sweeper
 ```
 
 This will install the Git-Branch-Sweeper package globally and allow the CLI tool to be run from any location.
@@ -56,6 +54,8 @@ $ git branch -D <branch_name>
 
 ## Develop
 
+`npm run dev`
+
 ### Build
 
 To build the project, in VS Code, run the default build task (which is tsc watch)
@@ -64,11 +64,10 @@ or run `npm run build`
 ### Test
 
 - Run the automated test `npm run test`
-- Once built, call node `./dist/index.js`
+- Once built, call `node ./dist/index.js`
 
 ## TODOs
 
-- publish to npm and remove dist folder from git
 - configurable branch pattern whitelist and blacklist
 - show stale branch information (stale from x days)
 - verbose mode (git command that are executed)

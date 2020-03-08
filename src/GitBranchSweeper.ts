@@ -9,21 +9,19 @@ enum RepoType {
 
 const git = require('cmd-executor').git;
 
-async function deleteRemoteMergedBranches(myBranches: string[]) {
-  console.log(chalk.green('Deleting remote branches:'));
-
-  for (const branch of myBranches) {
-    let br;
-    if (branch.indexOf('remotes/origin/') === 0) {
-      br = branch.substr('remotes/origin/'.length);
-    } else {
-      br = branch;
-    }
-
-    // delete branches remotely
-    await git.push(`origin --delete ${br}`);
-    console.log(chalk.red(`* deleted: ${branch}`));
+async function deleteRemoteMergedBranches(branch: string) {
+  let br;
+  if (branch.indexOf('remotes/origin/') === 0) {
+    br = branch.substr('remotes/origin/'.length);
+  } else if (branch.indexOf('origin/') === 0) {
+    br = branch.substr('origin/'.length);
+  } else {
+    br = branch;
   }
+
+  // delete branches remotely
+  await git.push(`origin --delete ${br}`);
+  console.log(chalk.red(`* deleted: ${branch}`));
 }
 
 async function deleteLocalMergedBranch(branchName: string) {
@@ -125,10 +123,12 @@ export async function prompt() {
       case RepoType.Remote:
         // list my remote branches
         const allMyRemoteBranches: string[] = await gitListBranches(
-          '-v -a --merged',
+          '-v -r',
           true,
         );
-        allMyRemoteBranches.push(new inquirer.Separator());
+        console.log(
+          chalk.green(`Found ${allMyRemoteBranches.length} remote branches`),
+        );
 
         // inquiry to choose branches to delete.
         const myChoiceOfRemoteBranches = (await inquirer.prompt({
@@ -139,7 +139,9 @@ export async function prompt() {
           pageSize: 20,
         })) as { branches: string[] };
 
-        await deleteRemoteMergedBranches(myChoiceOfRemoteBranches.branches);
+        for (const branch of myChoiceOfRemoteBranches.branches) {
+          await deleteRemoteMergedBranches(branch);
+        }
         break;
 
       default:

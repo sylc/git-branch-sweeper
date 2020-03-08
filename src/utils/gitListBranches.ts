@@ -11,8 +11,10 @@ const git = require('cmd-executor').git;
  * @param remote if we are looking for remote or local branches
  */
 export async function gitListBranches(opts: string, remote = false) {
+  // on local, all branches will be listed because it is ok to delete all branch locally.
+  // It is not ok to delete all branch on remote. so we filter by pattern
   let myBranchSelection = '';
-  if (remote) myBranchSelection = `remotes/origin/${myBranchPattern}`;
+  if (remote) myBranchSelection = `origin/${myBranchPattern}`;
 
   try {
     if (remote) {
@@ -30,7 +32,7 @@ export async function gitListBranches(opts: string, remote = false) {
     // filter branches to pattern
     const myBranches = branchList.filter(branchName => {
       // on the local repo, myBranchSelection will be '' : i.e: all branches will be listed
-      // on the remote, myBranchSelection will be 'remotes/origin/' + username;
+      // on the remote, myBranchSelection will be 'origin/' + username;
 
       // cannot delete current branch
       if (branchName === branchSummary.current) {

@@ -1,6 +1,17 @@
 # Git-Branch-Sweeper
 
-Node CLI to easily bulk delete local and remote branches.
+Node CLI to easily bulk delete local and remote branches based on branch name pattern
+
+- For the local repo: All branches, except branches **starting** with names `master` and `release`
+- For the remote: All branches with names containing your branch pattern\*\*, by default your username, except branches **starting** with names `master` and `release`
+
+\*\* You can configure the branch pattern by providing a .gbsrc file in your HOME directory as follow:
+
+```json
+{
+  "myBranchPattern": "my-cool-name"
+}
+```
 
 ## Installation
 
@@ -13,19 +24,6 @@ This will install the Git-Branch-Sweeper package globally and allow the CLI tool
 ## Usage
 
 From inside a gihub repo run `git-branch-sweeper` or `gbs`
-
-You will be prompted with the list of Branches that can be deleted, i.e:
-
-- For the local repo: All branches, except branches **starting** with names `master` and `release`
-- For the remote: All branches with names containing your branch pattern\*\*, by default your username, except branches **starting** with names `master` and `release`
-
-\*\* You can configure the branch pattern by providing a .gbsrc file in your HOME directory as follow:
-
-```json
-{
-  "myBranchPattern": "my-cool-name"
-}
-```
 
 ## Git command that tool execute under the hood
 
@@ -68,5 +66,6 @@ or run `npm run build`
 ## TODOs
 
 - configurable branch pattern whitelist and blacklist
+- show blacklist/white list in cli
 - show stale branch information (stale from x days)
 - verbose mode (git command that are executed)

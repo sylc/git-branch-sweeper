@@ -1,6 +1,6 @@
 {
   "name": "git-branch-sweeper",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Node CLI to easily bulk delete local and remote branches based on branch name pattern",
   "author": "Sylvan Cau",
   "license": "MIT",
